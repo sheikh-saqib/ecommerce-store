@@ -1,7 +1,7 @@
-﻿using API.Models;
+﻿using Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Data
+namespace Infrastructure.Data
 {
     public class DataContext : DbContext
     {
@@ -9,7 +9,6 @@ namespace API.Data
         {
 
         }
-
         public DbSet<Products> Products { get; set; }
     }
 }
