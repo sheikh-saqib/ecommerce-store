@@ -1,3 +1,5 @@
+using API.Helpers;
+using AutoMapper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
 builder.Configuration.AddJsonFile("appsettings.Development.json");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -24,7 +27,8 @@ var app = builder.Build();
     }
 
 app.UseHttpsRedirection();
-
+//to use static files like images folder
+app.UseStaticFiles();
 // Route requests to the WeatherForecastController
 app.MapControllers();
 
