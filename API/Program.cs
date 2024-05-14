@@ -1,4 +1,5 @@
 using API.Helpers;
+using API.Middleware;
 using AutoMapper;
 using Core.Interfaces;
 using Infrastructure.Data;
@@ -19,16 +20,17 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
 var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
+// Redirect to errors controller when no controller found
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 app.UseHttpsRedirection();
+
 //to use static files like images folder
 app.UseStaticFiles();
+
 // Route requests to the WeatherForecastController
 app.MapControllers();
 
