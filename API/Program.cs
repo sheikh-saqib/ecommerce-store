@@ -1,39 +1,35 @@
+using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using AutoMapper;
-using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddApplicationServices();
+builder.Services.AddSwaggerDocumentation();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
-builder.Services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
 builder.Configuration.AddJsonFile("appsettings.Development.json");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
-var app = builder.Build();
 
+//Middleware
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionMiddleware>();
-
 // Redirect to errors controller when no controller found
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
-
 app.UseHttpsRedirection();
-
 //to use static files like images folder
 app.UseStaticFiles();
-
+app.UseAuthorization();
+app.UseSwaggerDocumentation();
 // Route requests to the WeatherForecastController
 app.MapControllers();
-
 // to execute migration on start up
 using (var scope = app.Services.CreateScope())
 {
@@ -51,6 +47,5 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "Error occurred during migration");
     }
 }
-
 app.Run();
 
