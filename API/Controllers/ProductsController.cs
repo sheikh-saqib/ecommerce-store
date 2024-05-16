@@ -25,9 +25,10 @@ namespace API.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<IReadOnlyList<ProductsToReturnDto>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductsToReturnDto>>> GetProducts(string? sort,
+            int? brandId, int? typeId)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification();
+            var spec = new ProductsWithTypesAndBrandsSpecification(sort, brandId, typeId);
             var products = await _productsRepo.ListAsync(spec);
 
             return Ok(_mapper.Map<IReadOnlyList<Products>, IReadOnlyList<ProductsToReturnDto>>(products));
@@ -35,7 +36,7 @@ namespace API.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductsToReturnDto>> GetProducts(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
