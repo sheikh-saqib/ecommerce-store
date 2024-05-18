@@ -12,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerDocumentation();
+
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Configuration.AddJsonFile("appsettings.Development.json");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()); //enable cors policy with the given url
 // Redirect to errors controller when no controller found
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.UseHttpsRedirection();
