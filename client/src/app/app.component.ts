@@ -10,19 +10,7 @@ import { IPagination } from './models/pagination';
 })
 export class AppComponent implements OnInit {
   title = 'Layal';
-  products: IProduct[] = []; // Initialize products as an empty array
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.http
-      .get<IPagination>('https://localhost:5123/api/products?pageSize=50')
-      .subscribe(
-        (response) => {
-          this.products = response.data;
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
+  ngOnInit(): void {}
 }
