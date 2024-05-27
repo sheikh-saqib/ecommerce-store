@@ -14,6 +14,8 @@ export class ShopComponent {
   products: IProduct[] | undefined;
   brands: IBrand[] | undefined;
   types: IType[] | undefined;
+  brandIdSelected: number | undefined;
+  typeIdSelected: number | undefined;
   constructor(private shopService: ShopService) {}
 
   ngOnInit() {
@@ -23,19 +25,21 @@ export class ShopComponent {
   }
 
   getProducts() {
-    this.shopService.getProducts().subscribe(
-      (response) => {
-        this.products = response.data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    this.shopService
+      .getProducts(this.brandIdSelected, this.typeIdSelected)
+      .subscribe(
+        (response) => {
+          this.products = response?.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
   getBrands() {
     this.shopService.getBrands().subscribe(
       (response) => {
-        this.brands = response;
+        this.brands = [{ id: 0, name: 'All' }, ...response];
       },
       (error) => {
         console.log(error);
@@ -45,11 +49,21 @@ export class ShopComponent {
   getTypes() {
     this.shopService.getTypes().subscribe(
       (response) => {
-        this.types = response;
+        this.types = [{ id: 0, name: 'All' }, ...response];
       },
       (error) => {
         console.log(error);
       }
     );
+  }
+
+  onBrandSelected(brandId: number) {
+    this.brandIdSelected = brandId;
+    this.getProducts();
+  }
+
+  onTypeSelected(typeId: number) {
+    this.typeIdSelected = typeId;
+    this.getProducts();
   }
 }
