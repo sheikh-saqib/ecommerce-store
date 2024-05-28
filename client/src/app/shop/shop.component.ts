@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IProduct } from '../models/product';
 import { ShopService } from './shop.service';
-import { error } from 'console';
 import { IBrand } from '../models/brand';
 import { IType } from '../models/productType';
 
@@ -14,8 +13,8 @@ export class ShopComponent {
   products: IProduct[] | undefined;
   brands: IBrand[] | undefined;
   types: IType[] | undefined;
-  brandIdSelected: number | undefined;
-  typeIdSelected: number | undefined;
+  brandIdSelected = 0;
+  typeIdSelected = 0;
   constructor(private shopService: ShopService) {}
 
   ngOnInit() {
