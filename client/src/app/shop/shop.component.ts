@@ -15,6 +15,7 @@ export class ShopComponent {
   brands: IBrand[] | undefined;
   types: IType[] | undefined;
   shopParams = new ShopParams();
+  totalCount: number = 0;
   sortOptions = [
     { name: 'Alphabetical', value: 'name' },
     { name: 'Price: Low to High', value: 'priceAsc' },
@@ -32,8 +33,12 @@ export class ShopComponent {
   getProducts() {
     this.shopService.getProducts(this.shopParams).subscribe(
       (response) => {
-        // console.log(response);
-        this.products = response?.data;
+        if (response) {
+          this.products = response.data;
+          this.shopParams.pageNumber = response.pageIndex;
+          this.shopParams.pageSize = response.pageSize;
+          this.totalCount = response.count;
+        }
       },
       (error) => {
         console.log(error);
@@ -74,6 +79,10 @@ export class ShopComponent {
   onSortSelected(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.shopParams.sort = target.value;
+    this.getProducts();
+  }
+  onPageChanged(event: any) {
+    this.shopParams.pageNumber = event.page;
     this.getProducts();
   }
 }
